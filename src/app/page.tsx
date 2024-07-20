@@ -1,7 +1,4 @@
 "use client"
-import Image from "next/image";
-import logo from "../app/assets/image/logo.png"
-import hero from "../app/assets/image/hero.png"
 import Hero from "./hero";
 import { useEffect, useState } from "react";
 

@@ -40,7 +40,18 @@ export default function page() {
             }} ></input>
 
 
-            <div className="h-[5vh] w-full bg-[#F1E6B8] font-black rounded-lg text-2xl text-[#2856A3] text-center flex justify-center items-center hover:cursor-pointer" onClick={() => {}}>
+            <div className="h-[5vh] w-full bg-[#F1E6B8] font-black rounded-lg text-2xl text-[#2856A3] text-center flex justify-center items-center hover:cursor-pointer" onClick={async () => {
+                let res = await fetch("http://localhost:3000/api/auth/signUp", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        email: user.email, password: user.password,
+                    })
+                })
+                const data = (await res.json());
+                if (data["status"] == "done"){
+                    localStorage.setItem("id",data["jwt"])
+                }
+            }}>
                 Done
             </div>
         </form>
