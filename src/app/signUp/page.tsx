@@ -5,9 +5,11 @@ import image from "../assets/image/auth.png"
 import Image from "next/image"
 import { useState } from "react"
 import gsap from "gsap"
-
+import {useRouter} from "next/navigation"
 
 export default function page() {
+    const router = useRouter()
+
     const [level, setLevel] = useState(1)
     const [check, setCheck] = useState(false)
     const [user, setUser] = useState<any>({
@@ -179,6 +181,7 @@ export default function page() {
                         const data = (await res.json());
                         if (data["status"] == "done"){
                             localStorage.setItem("id",data["jwt"])
+                            router.replace("/")
                         }
                     }
                 }
