@@ -27,12 +27,13 @@ export async function POST(req: Request) {
         return NextResponse.json(
             {
                 "status": "done",
-                "jwt": token
+                "jwt": token,
+                "id": user.id
             }
         )
-    }catch(e){
+    } catch (e) {
         console.log(e);
-        
+
         return NextResponse.json(
             {
                 e

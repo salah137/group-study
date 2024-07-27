@@ -5,7 +5,7 @@ import image from "../assets/image/auth.png"
 import Image from "next/image"
 import { useState } from "react"
 import gsap from "gsap"
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
 
 export default function page() {
     const router = useRouter()
@@ -28,7 +28,7 @@ export default function page() {
 
             <span id="f-1" className="flex flex-col h-2/3 justify-around items-center w-[50vw]">
                 <h1 className="text-white text-4xl font-black">Find a Group</h1>
-                <div className = "w-full">
+                <div className="w-full">
                     <input className="h-[5vh] w-full border-none outline-none p-2 rounded-md" placeholder="your name" type="name" value={user.name} onChange={(e) => {
                         const { email, password, confirmed, language, study, interests } = user
                         setUser(
@@ -42,7 +42,7 @@ export default function page() {
                         check && !user.name && <h3 className="text-red-700 text-left">required field</h3>
                     }</div>
 
-                <div className = "w-full">
+                <div className="w-full">
                     <input className="h-[5vh] w-full border-none outline-none p-2 rounded-md" placeholder="your email" type="email" value={user.email} onChange={(e) => {
                         const { name, password, confirmed, language, study, interests } = user
                         setUser(
@@ -56,7 +56,7 @@ export default function page() {
                         check && !user.email && <h3 className="text-red-700 text-left">required field</h3>
                     }</div>
 
-                <div className = "w-full">
+                <div className="w-full">
                     <input className="h-[5vh] w-full border-none outline-none p-2 rounded-md" placeholder="your password" type="password" value={user.password} onChange={(e) => {
                         const { name, email, confirmed, language, study, interests } = user
                         setUser(
@@ -70,7 +70,7 @@ export default function page() {
                         check && !user.password && <h3 className="text-red-700 text-left">required field</h3>
                     }</div>
 
-                <div className = "w-full">
+                <div className="w-full">
                     <input className="h-[5vh] w-full border-none outline-none p-2 rounded-md" placeholder="confirme password " type="password" value={user.confirmed} onChange={(e) => {
                         const { name, email, password, language, study, interests } = user
                         setUser(
@@ -87,7 +87,7 @@ export default function page() {
 
             <span id="f-2" className="flex-col h-2/4   items-center hidden w-[50vw]">
 
-                <div className = "w-full">
+                <div className="w-full">
                     <input className="h-[5vh] w-full border-none outline-none p-2 rounded-md mt-10" placeholder="your first language" type="text" value={user.language} onChange={(e) => {
                         const { name, email, password, confirmed, study, interests } = user
                         setUser(
@@ -101,7 +101,7 @@ export default function page() {
                         check && !user.language && <h3 className="text-red-700 text-left">required field</h3>
                     }</div>
 
-                <div className = "w-full">
+                <div className="w-full">
                     <input className="h-[5vh] w-full border-none outline-none p-2 rounded-md mt-10" placeholder="what do you study" type="text" value={user.study} onChange={(e) => {
                         const { name, email, password, confirmed, language, interests } = user
                         setUser(
@@ -115,7 +115,7 @@ export default function page() {
                         check && !user.study && <h3 className="text-red-700 text-left">required field</h3>
                     }</div>
 
-                <div className = "w-full">
+                <div className="w-full">
                     <input className="h-[5vh] w-full border-none outline-none p-2 rounded-md mt-10" placeholder="your interests" type="text" value={user.interests} onChange={(e) => {
                         const { name, email, password, confirmed, language, study } = user
                         setUser(
@@ -179,8 +179,9 @@ export default function page() {
                             })
                         })
                         const data = (await res.json());
-                        if (data["status"] == "done"){
-                            localStorage.setItem("id",data["jwt"])
+                        if (data["status"] == "done") {
+                            localStorage.setItem("token", data["jwt"])
+                            localStorage.setItem("id", data["id"])
                             router.replace("/")
                         }
                     }

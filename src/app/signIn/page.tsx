@@ -49,7 +49,8 @@ export default function page() {
                 })
                 const data = (await res.json());
                 if (data["status"] == "done"){
-                    localStorage.setItem("id",data["jwt"])
+                    localStorage.setItem("token",data["jwt"])
+                    localStorage.setItem("id",data["id"])
                     router.replace("/")
                 }
             }}>

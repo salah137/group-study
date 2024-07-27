@@ -20,7 +20,8 @@ export async function POST(req: Request) {
             return NextResponse.json(
                 {
                     "status": "done",
-                    "jwt": token
+                    "jwt": token,
+                    "id":user.id
                 }
             )
         } else {
