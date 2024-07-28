@@ -1,20 +1,16 @@
 "use client";
 
-import { Children, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import gsap from "gsap";
 import Image from "next/image";
 import img from "../../app/assets/image/logo.png";
-import { IoMdAdd } from "react-icons/io";
-import { socket } from "../socket";
 import { PrismaClient } from "@prisma/client/extension";
-import { IoSend } from "react-icons/io5";
 import Link from "next/link";
 
-async function reciveMessage() {
-    "use service"
-    const prisma = new PrismaClient()
-}
+let groups : any[] = []
+
+
 
 export default function RootLayout({
     children,
@@ -22,16 +18,36 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
 
-    const [toShow, setToShow] = useState<any>(false);
     const [chatOpned, setChatOpned] = useState(false);
     const [showChanales, setShow] = useState(false);
-    const [groupe, setGroupe] = useState()
-    const [message, setMessage] = useState<string>()
-    const [to, setTo] = useState()
+
+    
+    useEffect(() => {
+        const userId = localStorage.getItem("id");
+        const token = localStorage.getItem("token");
+
+        if (userId && token) {
+            fetch(`http://localhost:3000/api/groupe/getGroups?userId=${userId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': `${token}`,
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    groups = data.groups || [];
+                    // Update your component state here if needed
+                })
+                .catch(error => {
+                    console.error("Error fetching groups:", error);
+                });
+        }
+    }, []);
 
     useEffect(
         () => {
             if (window.screen.width < 800)
+
                 gsap.to(
                     "#content", {
                     display: "none"
@@ -74,9 +90,9 @@ export default function RootLayout({
                             setShow(false);
                         }
                     }}>
-                        {[1, 2, 3, 4, 5].map((e) => (
-                            <Link href={"/home/gdfg"}>
-                                <div key={e} className="flex flex-row justify-center items-center hover:bg-[#8a8261] w-full">
+                        {groups.map((e : any) => (
+                            <Link href={"/home/gdfg"} className="w-full">
+                                <div key={e} className="flex flex-row justify-center items-center hover:bg-[#8a8261] w-[100%]">
                                     <Image alt="logo" src={img} className="w-[10vw] rounded-[50%] bg-black h-[10vw] mt-3 lg:w-[5vw] lg:h-[5vw]" />
                                     <h2 className="font-black hidden m-2 groupe-title">Hi hi H Ihih</h2>
                                 </div>

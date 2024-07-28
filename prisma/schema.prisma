@@ -4,8 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("db")
 }
 
 model User {
@@ -16,20 +16,22 @@ model User {
   language  String
   study     String
   interests String
-  GroupUser GroupUser?
+  profile String
   groups    Group[]
   message   Message[]
 }
 
 model GroupUser {
   id     Int  @id @default(autoincrement())
-  userId Int  @unique
-  user   User @relation(fields: [userId], references: [id])
+  userId Int  
+  groupId Int
 }
 
 model Group {
   id     Int    @id @default(autoincrement())
   userId Int
+  profile String
+  topic String
   User   User[]
 }
 

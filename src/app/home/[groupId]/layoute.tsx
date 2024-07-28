@@ -9,18 +9,11 @@ import { socket } from "../../socket";
 import { PrismaClient } from "@prisma/client/extension";
 import { IoSend } from "react-icons/io5";
 
-async function reciveMessage() {
-  "use service"
-  const prisma = new PrismaClient()
-}
 
 export default function Home() {
 
   const [toShow, setToShow] = useState<any>(false);
   const [chatOpned, setChatOpned] = useState(false);
-  const [showChanales, setShow] = useState(false);
-  const [groupe, setGroupe] = useState()
-  const [message, setMessage] = useState<string>()
   const [to, setTo] = useState()
 
   useEffect(() => {
@@ -46,7 +39,6 @@ export default function Home() {
           <div className="absolute bottom-0 w-[100vw] right-0 flex lg:w-[70vw]" id = "input-mess">
             <input type='text' onChange={
               (e) => {
-                setMessage(e.target.value)
               }
             } className="w-[100%] outline-none p-2" />
             <button className="bg-[#F1E6B8] w-[12vw] h-[5vh] text-center border-[1px] border-solid border-black flex justify-center items-center hover:cursor-pointer hover:bg-[#8a8262] lg:w-[6vw]">
