@@ -5,8 +5,6 @@ export async function GET(req: Request) {
     const prisma = new PrismaClient();
     const  { searchParams }  = new URL(req.url);
     const userId = searchParams.get("userId");
-
-    console.log(userId);
     
 
     if (!userId) {
@@ -19,10 +17,15 @@ export async function GET(req: Request) {
         },
     });
 
+    
 
 
     const groups = await Promise.all(
         groupUsers.map(async (e) => {
+            console.log(e);
+            
+
+
             const group = await prisma.group.findUnique({
                 where: {
                     id: e.groupId,
@@ -32,5 +35,6 @@ export async function GET(req: Request) {
         })
     );
 
-    return NextResponse.json({ groups });
+    
+    return NextResponse.json( groups );
 }

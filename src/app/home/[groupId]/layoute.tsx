@@ -8,15 +8,20 @@ import { IoMdAdd } from "react-icons/io";
 import { socket } from "../../socket";
 import { PrismaClient } from "@prisma/client/extension";
 import { IoSend } from "react-icons/io5";
+import { useSearchParams } from 'next/navigation'
 
 
 export default function Home() {
+  const searchParams = useSearchParams()
+  const groupId = searchParams.get('groupId')
 
   const [toShow, setToShow] = useState<any>(false);
   const [chatOpned, setChatOpned] = useState(false);
-  const [to, setTo] = useState()
+
 
   useEffect(() => {
+    console.log("hhnlkk");
+    
     if (localStorage.getItem("token")) {
       if (socket.connected) {
         console.log('Socket connected');
@@ -34,6 +39,7 @@ export default function Home() {
       {toShow ? <Home /> :
         <main className="h-dvh bg-[#7C98C6]">
           <div className="h-dvh w-full bg-[#2856A3] lg:w-[30vw]" id="groupe-chat">
+
           </div>
           {(chatOpned || window.screen.width > 800 ) &&
           <div className="absolute bottom-0 w-[100vw] right-0 flex lg:w-[70vw]" id = "input-mess">

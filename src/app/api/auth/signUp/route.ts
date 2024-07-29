@@ -15,7 +15,7 @@ export async function POST(req: Request) {
                     name: data.name,
                     email: data.email,
                     password: hashed,
-
+                    profile : "",
                     language: data.language,
                     study: data.study,
                     interests: data.interests

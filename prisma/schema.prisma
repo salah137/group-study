@@ -25,6 +25,8 @@ model GroupUser {
   id     Int  @id @default(autoincrement())
   userId Int  
   groupId Int
+  profile String
+  name String
 }
 
 model Group {
@@ -32,6 +34,7 @@ model Group {
   userId Int
   profile String
   topic String
+  groupName String
   User   User[]
 }
 
