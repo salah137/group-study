@@ -13,7 +13,6 @@ export default function page() {
     const [title, setTitle] = useState("")
     const [interests, setIntersts] = useState("")
     const [lang, setLang] = useState("")
-    const [imageUrl, setImageUrl] = useState("https://firebasestorage.googleapis.com/v0/b/prepare-91cd7.appspot.com/o/images%2Fdefault-group.png?alt=media&token=b9eb4e44-9797-4b3d-86ca-64e9ce1a792c")
 
     const router = useRouter()
 
@@ -33,16 +32,15 @@ export default function page() {
     }
 
     const createGroupe = async () => {
-        if (file) {
-            const url = await uploadImage()
-            setImageUrl(url)
-        }
+  
+           let  url = await uploadImage()
+        
 
         const res = await fetch(
             "http://localhost:3000/api/groupe/createGroup",{
                 method : "POST",
                 body : JSON.stringify({
-                    profile : imageUrl,
+                    profile : url || "https://firebasestorage.googleapis.com/v0/b/prepare-91cd7.appspot.com/o/images%2Fdefault-group.png?alt=media&token=b9eb4e44-9797-4b3d-86ca-64e9ce1a792c",
                     topic : interests,
                     groupName : title,
                     userId : Number(localStorage.getItem("id"))

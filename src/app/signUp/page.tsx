@@ -1,12 +1,15 @@
 "use client"
 
 import "../globals.css"
-import image from "../assets/image/auth.png"
+import imageg from "../assets/image/auth.png"
 import Image from "next/image"
 import { useState } from "react"
 import gsap from "gsap"
 import { useRouter } from "next/navigation"
 import { FaFileUpload } from "react-icons/fa"
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { title } from "process"
+import app from "../firebase-config"
 
 export default function page() {
     const router = useRouter()
@@ -14,6 +17,7 @@ export default function page() {
     const [level, setLevel] = useState(1)
     const [check, setCheck] = useState(false)
     const [file, setFile] = useState<string>()
+    const [image, setImage] = useState<any>()
 
     const [user, setUser] = useState<any>({
         name: "",
@@ -25,8 +29,24 @@ export default function page() {
         interests: ""
     })
 
+    const uploadImage = async () => {
+        const metadata = {
+            // Use underscores or camelCase
+            contentType: 'image/png',
+            custom_key: 'some value',  // Using underscores
+            customKeyValue: 'some value', // Using camelCase
+        };
+
+        const storage = getStorage(app)
+
+        const fileRef = ref(storage, `images/${title}`)
+        await uploadBytes(fileRef, image, metadata)
+        return (getDownloadURL(fileRef));
+    }
+
+
     return <main className="bg-[#2856A3] w-full h-dvh flex flex-col justify-center items-center lg:flex-row lg:justify-around" >
-        <Image src={image} alt="img" className="w-2/3 lg:w-1/3" id="img" />
+        <Image src={imageg} alt="img" className="w-2/3 lg:w-1/3" id="img" />
         <form className="flex flex-col h-2/3 justify-around items-center ">
 
             <span id="f-1" className="flex flex-col h-2/3 justify-around items-center w-[50vw]">
@@ -99,11 +119,12 @@ export default function page() {
                         ({
                             target: { files }
                         }) => {
+                            files![0] && setImage(files![0])
+
                             if (files![0]) {
                                 setFile(URL.createObjectURL(files![0]))
-
-                                //setToshare(files![0].stream)
                             }
+        
                         }
                     } />
                     {file ? <Image src={`${file}`} alt="" width={100} height={100} className="lg:w-[15vw] lg:h-[15vw] rounded-[50%] w-[30vw] h-[30vw]" /> : <FaFileUpload />}
@@ -192,12 +213,14 @@ export default function page() {
                     setCheck(false)
 
                 } else {
-                    //group-study/src/app/api/auth/signUp
                     if (name && email && password && confirmed && confirmed == password && language && study && interests) {
+                        
+                        const url = await uploadImage()
+
                         let res = await fetch("http://localhost:3000/api/auth/signUp", {
                             method: "POST",
                             body: JSON.stringify({
-                                name, email, password, confirmed, language, study, interests
+                                name, email, password, confirmed, language, study, interests, profile : url
                             })
                         })
                         const data = (await res.json());
