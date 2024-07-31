@@ -5,10 +5,11 @@ import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import gsap from "gsap";
 import Image from "next/image";
 import img from "../../app/assets/image/logo.png";
-import { PrismaClient } from "@prisma/client/extension";
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { IoAdd } from "react-icons/io5";
+import { MdOutlineExplore } from "react-icons/md";
 
 
 
@@ -18,13 +19,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
 
-    const router =  useRouter()
+    const router = useRouter()
     const [chatOpned, setChatOpned] = useState(false);
     const [showChanales, setShow] = useState(false);
     let [groups, setGroups] = useState([])
     const [searching, setSearch] = useState(false)
-    const [searched, setSearched] = useState("")
-    const [animating,setAnimating] = useState(false)
+    const [animating, setAnimating] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -54,7 +54,7 @@ export default function RootLayout({
             if (window.screen.width < 800)
 
                 gsap.to(
-                    "#content", {
+                    "#content, .content", {
                     display: "none"
                 }
                 )
@@ -80,7 +80,7 @@ export default function RootLayout({
                                     })
                                     setAnimating(false)
                                     setSearch(true)
-                                } else if(!animating) {
+                                } else if (!animating) {
                                     setAnimating(true)
                                     tl.to("#input", {
                                         width: 0,
@@ -100,18 +100,17 @@ export default function RootLayout({
                         } />
                         <input className="bg-[#F1E6B8] outline-0 w-0" id="input" onChange={
                             (e) => {
-                                setSearched(e.target.value)
-                                if (searched.length >= 1){
-                                    router.push(`/home/search/${searched}`)
+                                if (e.target.value.length >= 0) {
+                                    router.push(`/home/search/${e.target.value}`)
                                 }
                             }
-                        } value={searched}></input>
+                        } ></input>
                     </div>
                 </div>
                 <div className=" h-dvh w-full bg-[#2856A3] lg:w-[30vw] z-0" id="groupe-chat">
                     <div className=" h-dvh bg-[#F1E6B8] w-[15vh] rounded-lg z-0 p-2 flex flex-col items-center lg:w-[10vw]" id="chanels" onClick={() => {
                         const t = gsap.timeline();
-                        if (!showChanales) {
+                        if (!showChanales && !chatOpned) {
                             console.log("Hiii");
 
                             if (window.screen.width < 800) {
@@ -119,9 +118,9 @@ export default function RootLayout({
                                     display: "none"
                                 });
                                 t.to("#search-bar", {
-                                    display : "none"
+                                    display: "none"
                                 })
-    
+
                             }
 
                             t.to("#chanels", {
@@ -130,11 +129,11 @@ export default function RootLayout({
                             t.to(".groupe-title", {
                                 display: "inline",
                             });
-                            
+
 
 
                             setShow(true);
-                        } else {
+                        } else if(!chatOpned) {
                             t.to(".groupe-title", {
                                 display: "none"
                             });
@@ -146,51 +145,56 @@ export default function RootLayout({
                                     display: "inline"
                                 });
                                 t.to("#search-bar", {
-                                    display : "block"
+                                    display: "block"
                                 })
-    
+
                             }
 
                             setShow(false);
                         }
                     }}>
-                        {groups.map((e: any) => (
+                        {groups ? groups.map((e: any) => (
                             <Link href={`/home/${e["id"]}`} className="w-full">
-                                <div key={e} className="flex flex-row justify-center items-center hover:bg-[#8a8261] w-[100%]">
-                                    <Image alt="logo" src={img} className="w-[10vw] rounded-[50%] bg-black h-[10vw] mt-3 lg:w-[5vw] lg:h-[5vw]" />
-                                    <h2 className="font-black hidden m-2 groupe-title">Hi hi H Ihih</h2>
+                                <div key={e["id"]} className="flex flex-row justify-center items-center hover:bg-[#8a8261] w-[100%]">
+                                    <Image alt="logo" src={e["profile"]} className="w-[10vw] rounded-[50%] bg-black h-[10vw] mt-3 lg:w-[5vw] lg:h-[5vw]" />
+                                    <h2 className="font-black hidden m-2 groupe-title">{e["title"]}</h2>
                                 </div>
 
                             </Link>
-                        ))}
+                        )) : <></>}
+
+                       {!chatOpned && <div className="absolute bottom-0">
+                            <Link  href = {"/home/createGroupe"}className="m-3 flex justify-center items-center bottom-0 bg-[#2856A3] w-[10vw] h-[10vw] rounded-[50%] cursor-pointer hover:bg-[#5381d1] lg:w-[7vw] lg:h-[7vw]" >
+                                <IoAdd className="text-[#F1E6B8]  text-4xl" />
+                            </Link>
+                            <Link href={"/home/allGroupes"} className="m-3 flex justify-center items-center bottom-0 bg-[#2856A3] w-[10vw] h-[10vw] rounded-[50%] cursor-pointer hover:bg-[#5381d1] lg:w-[7vw] lg:h-[7vw]" >
+                                <MdOutlineExplore className="text-[#F1E6B8]  text-4xl" />
+                            </Link>
+                        </div>}
                     </div>
                     <BsFillArrowRightSquareFill className="text-[#F1E6B8] text-4xl absolute right-[0] top-1/2 z-1 lg:hidden" onClick={() => {
                         const t = gsap.timeline();
                         if (!chatOpned) {
                             t.to("#search-bar", {
-                                display : "none"
+                                display: "none"
                             })
                             t.to("#chanels", { width: 0 });
                             t.to("#groupe-chat", { width: 0 });
                             t.to("#input-mess", {
                                 display: "flex",
-                                duration: 1
-                            })
-                            t.to("#input-mess", {
-                                display: "block"
                             })
                             t.to(
-                                "#content", {
-                                display: "block"
+                                "#content, .content", {
+                                display: "flex"
                             }
 
                             )
-                            
+
 
                             setChatOpned(true);
                         } else {
                             t.to(
-                                "#content", {
+                                "#content, .content", {
                                 display: "none"
                             }
                             )
@@ -201,7 +205,7 @@ export default function RootLayout({
                             t.to("#arrow", { right: 0 });
                             t.to("#chanels", { width: window.screen.width < 1000 ? "20vw" : "100vw" });
                             t.to("#search-bar", {
-                                display : "block"
+                                display: "block"
                             })
                             setChatOpned(false);
                         }

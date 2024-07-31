@@ -12,6 +12,7 @@
     "@gsap/react": "^2.1.1",
     "@prisma/client": "^5.17.0",
     "argon2": "^0.40.3",
+    "firebase": "^10.12.4",
     "gsap": "^3.12.5",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",

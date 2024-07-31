@@ -6,12 +6,15 @@ import Image from "next/image"
 import { useState } from "react"
 import gsap from "gsap"
 import { useRouter } from "next/navigation"
+import { FaFileUpload } from "react-icons/fa"
 
 export default function page() {
     const router = useRouter()
 
     const [level, setLevel] = useState(1)
     const [check, setCheck] = useState(false)
+    const [file, setFile] = useState<string>()
+
     const [user, setUser] = useState<any>({
         name: "",
         email: "",
@@ -85,8 +88,27 @@ export default function page() {
                     }</div>
             </span>
 
-            <span id="f-2" className="flex-col h-2/4   items-center hidden w-[50vw]">
+            <span id="f-2" className="flex-col h-3/4   items-center hidden w-[50vw]">
+                <div className="w-[30vw] h-[30vw] lg:w-[15vw] bg-[#F1E6B8] lg:h-[15vw] flex items-center justify-center rounded-[50%] text-4xl text-[#2856A3] hover:bg-[#98accf] cursor-pointer" onClick={
+                    () => {
+                        let element: HTMLElement = document.querySelector("#file-upload") as HTMLElement;
+                        element.click()
+                    }
+                }>
+                    <input type="file" accept="image/* && video/*" id="file-upload" hidden onChange={
+                        ({
+                            target: { files }
+                        }) => {
+                            if (files![0]) {
+                                setFile(URL.createObjectURL(files![0]))
 
+                                //setToshare(files![0].stream)
+                            }
+                        }
+                    } />
+                    {file ? <Image src={`${file}`} alt="" width={100} height={100} className="lg:w-[15vw] lg:h-[15vw] rounded-[50%] w-[30vw] h-[30vw]" /> : <FaFileUpload />}
+
+                </div>
                 <div className="w-full">
                     <input className="h-[5vh] w-full border-none outline-none p-2 rounded-md mt-10" placeholder="your first language" type="text" value={user.language} onChange={(e) => {
                         const { name, email, password, confirmed, study, interests } = user
