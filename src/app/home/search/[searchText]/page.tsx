@@ -28,6 +28,7 @@ export default function page() {
                         results.map((e : any) => {
                             return <GroupeIdentifier data = {
                                 {
+                                    id : e.id,
                                     title : e.groupName,
                                     interests : e.topic,
                                     language: e.language,

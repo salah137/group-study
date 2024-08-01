@@ -8,19 +8,27 @@ import { IoMdAdd } from "react-icons/io";
 import { socket } from "../../socket";
 import { PrismaClient } from "@prisma/client/extension";
 import { IoSend } from "react-icons/io5";
-import { useSearchParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 
 
 export default function Home() {
-  const searchParams = useSearchParams()
-  const groupId = searchParams.get('groupId')
+  const params = useParams<{ groupId: string }>()
 
   const [toShow, setToShow] = useState<any>(false);
   const [chatOpned, setChatOpned] = useState(false);
 
+  useEffect(
+    ()=>{
+      (async ()=>{
+        let res = await fetch(`http://localhost:3000/getGroupUsers?groupId=${params.groupId}`)
+
+        console.log(await res.json());
+        
+      })()
+    },[]
+  )
 
   useEffect(() => {
-    console.log("hhnlkk");
     
     if (localStorage.getItem("token")) {
       if (socket.connected) {
