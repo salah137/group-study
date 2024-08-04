@@ -22,6 +22,9 @@ export default function RootLayout({
   let [groups, setGroups] = useState([]);
   const [searching, setSearch] = useState(false);
   const [animating, setAnimating] = useState(false);
+  const [groupId,setId] = useState<any>()
+  const [users, setUsers] = useState([])
+
 
   useEffect(() => {
     (async () => {
@@ -105,6 +108,7 @@ export default function RootLayout({
             ></input>
           </div>
         </div>
+
         <div
           className=" h-dvh w-full bg-[#2856A3] lg:w-[30vw] z-0"
           id="groupe-chat"
@@ -115,7 +119,6 @@ export default function RootLayout({
             onClick={() => {
               const t = gsap.timeline();
               if (!showChanales && !chatOpned) {
-                console.log("Hiii");
 
                 if (window.screen.width < 800) {
                   t.to("#arrow", {
@@ -125,16 +128,23 @@ export default function RootLayout({
                     display: "none",
                   });
                 }
-
+                t.to(
+                  ".groupe-list", {
+                  display: "none"
+                }
+                )
                 t.to("#chanels", {
                   width: window.screen.width < 800 ? "100vw" : "30vw",
                 });
+
+
                 t.to(".groupe-title", {
                   display: "inline",
                 });
 
                 setShow(true);
               } else if (!chatOpned) {
+
                 t.to(".groupe-title", {
                   display: "none",
                 });
@@ -149,7 +159,11 @@ export default function RootLayout({
                     display: "block",
                   });
                 }
-
+                t.to(
+                  ".groupe-list", {
+                  display: "flex"
+                }
+                )
                 setShow(false);
               }
             }}
@@ -158,7 +172,14 @@ export default function RootLayout({
               <div className="h-[75vh] overflow-y-scroll" id="groups">
                 {groups.map((e: any) => (
                   <Link href={`/home/${e["id"]}`} className="w-full">
-                    <div
+                    <div onClick={
+                      async () => {
+                        const res = await fetch(`http://localhost:3000/api/groupe/getGroupUsers?groupId=${e["id"]}`)
+                        const data = await res.json()
+                        setUsers(data)
+                        setId(e["id"])
+                      }
+                    }
                       key={e["id"]}
                       className="flex flex-row justify-center items-center hover:bg-[#8a8261] w-[100%]"
                     >
@@ -197,6 +218,25 @@ export default function RootLayout({
               </div>
             )}
           </div>
+
+          {users && groupId && <div className="absolute w-[80vw] left-[20vw] top-[15vh] lg:left-[10vw] flex flex-col groupe-list lg:w-[20vw]  ">
+            <div className="h-[10vh]  flex items-center justify-start border-b-2 border-b-black cursor-pointer">
+                    <Image src={"https://firebasestorage.googleapis.com/v0/b/prepare-91cd7.appspot.com/o/images%2Fdefault-group.png?alt=media&token=b9eb4e44-9797-4b3d-86ca-64e9ce1a792c"} alt="pr" width={200} height={200} className="w-[15vw] h-[15vw] lg:w-[5vw] lg:h-[5vw] rounded-[50%] m-2" />
+                    <h2>general chat</h2>
+                  </div>
+            {
+              users.map(
+                (e) => {
+                  return <div className="h-[10vh]  flex items-center justify-start border-b-2 border-b-black cursor-pointer">
+                    <Image src={e["profile"]} alt="pr" width={200} height={200} className="w-[15vw] h-[15vw] lg:w-[5vw] lg:h-[5vw] rounded-[50%] m-2" />
+                    <h2>{e["name"]}</h2>
+                  </div>
+                }
+              )
+            }
+          </div >}
+
+
           <BsFillArrowRightSquareFill
             className="text-[#F1E6B8] text-4xl absolute right-[0] top-1/2 z-1 lg:hidden"
             onClick={() => {
@@ -205,6 +245,11 @@ export default function RootLayout({
                 t.to("#search-bar", {
                   display: "none",
                 });
+
+                t.to(".groupe-list",{
+                  display : "none"
+                })
+
                 t.to("#chanels", { width: 0 });
                 t.to("#groupe-chat", { width: 0 });
                 t.to("#input-mess", {
@@ -219,6 +264,8 @@ export default function RootLayout({
                 t.to("#content, .content", {
                   display: "none",
                 });
+
+                
                 t.to("#input-mess", {
                   display: "none",
                 });
@@ -230,11 +277,15 @@ export default function RootLayout({
                 t.to("#search-bar", {
                   display: "block",
                 });
+                t.to(".groupe-list",{
+                  display : "block"
+                })
                 setChatOpned(false);
               }
             }}
             id="arrow"
           />
+
           {children}
         </div>
       </main>
