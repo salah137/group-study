@@ -25,7 +25,6 @@ export default function RootLayout({
   const [groupId,setId] = useState<any>()
   const [users, setUsers] = useState([])
 
-
   useEffect(() => {
     (async () => {
       const userId = localStorage.getItem("id");
@@ -177,6 +176,7 @@ export default function RootLayout({
                         const res = await fetch(`http://localhost:3000/api/groupe/getGroupUsers?groupId=${e["id"]}`)
                         const data = await res.json()
                         setUsers(data)
+                        setChatOpned(false)
                         setId(e["id"])
                       }
                     }
@@ -220,14 +220,24 @@ export default function RootLayout({
           </div>
 
           {users && groupId && <div className="absolute w-[80vw] left-[20vw] top-[15vh] lg:left-[10vw] flex flex-col groupe-list lg:w-[20vw]  ">
-            <div className="h-[10vh]  flex items-center justify-start border-b-2 border-b-black cursor-pointer">
+            <div className="h-[10vh]  flex items-center justify-start border-b-2 border-b-black cursor-pointer" onClick={
+              ()=>{
+                router.push(`/home/${groupId}/generale`)
+
+              }
+            }>
                     <Image src={"https://firebasestorage.googleapis.com/v0/b/prepare-91cd7.appspot.com/o/images%2Fdefault-group.png?alt=media&token=b9eb4e44-9797-4b3d-86ca-64e9ce1a792c"} alt="pr" width={200} height={200} className="w-[15vw] h-[15vw] lg:w-[5vw] lg:h-[5vw] rounded-[50%] m-2" />
                     <h2>general chat</h2>
                   </div>
             {
               users.map(
                 (e) => {
-                  return <div className="h-[10vh]  flex items-center justify-start border-b-2 border-b-black cursor-pointer">
+                  return <div onClick={
+                    ()=>{
+                      
+                      router.push(`/home/${groupId}/${e["userId"]}`)
+                    }
+                  } className="h-[10vh] chat  flex items-center justify-start border-b-2 border-b-black cursor-pointer">
                     <Image src={e["profile"]} alt="pr" width={200} height={200} className="w-[15vw] h-[15vw] lg:w-[5vw] lg:h-[5vw] rounded-[50%] m-2" />
                     <h2>{e["name"]}</h2>
                   </div>
